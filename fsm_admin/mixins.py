@@ -2,12 +2,19 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 
+import django
 from django.conf import settings
 from django.contrib import messages
-from django.utils.translation import ugettext as _
-from django.utils.encoding import force_text
+if django.VERSION < (4, 0):
+    from django.utils.encoding import force_text as force_str
+    from django.utils.translation import ugettext_lazy as _
+else:
+    from django.utils.encoding import force_str
+    from django.utils.translation import gettext_lazy as _
 from django.contrib.admin.templatetags.admin_urls import add_preserved_filters
 from django.http import HttpResponseRedirect
+
+from django_fsm import ConcurrentTransition
 
 
 class FSMTransitionMixin(object):
@@ -43,7 +50,7 @@ class FSMTransitionMixin(object):
     #      _fsmtransition-revision_state-delete
     fsm_input_prefix = '_fsmtransition'
     # The name of one or more FSMFields on the model to transition
-    fsm_field = ['state',]
+    fsm_field = ['state']
     change_form_template = 'fsm_admin/change_form.html'
     default_disallow_transition = not getattr(settings, 'FSM_ADMIN_FORCE_PERMIT', False)
 
@@ -90,7 +97,7 @@ class FSMTransitionMixin(object):
     def response_change(self, request, obj):
         """
         Override of `ModelAdmin.response_change` to detect the FSM button
-        that was clicked in the submit row and perform the state transtion.
+        that was clicked in the submit row and perform the state transition.
         """
         if not getattr(obj, '_fsmtransition_results', None):
             return super(FSMTransitionMixin, self).response_change(request, obj)
@@ -116,7 +123,7 @@ class FSMTransitionMixin(object):
         transitions = []
         for field, field_transitions in iter(self._fsm_get_transitions(obj, request).items()):
             transitions += [t.name for t in field_transitions]
-        return transitions
+        return transition in transitions
 
     def _filter_admin_transitions(self, transitions_generator):
         """
@@ -150,7 +157,7 @@ class FSMTransitionMixin(object):
     def _do_transition(self, transition, request, obj, form, fsm_field_name):
         original_state = self.display_fsm_field(obj, fsm_field_name)
         msg_dict = {
-            'obj': force_text(obj),
+            'obj': force_str(obj),
             'transition': transition,
             'original_state': original_state,
         }
@@ -160,11 +167,15 @@ class FSMTransitionMixin(object):
         if available and trans_func:
             # Run the transition
             try:
-                # Attempt to pass in the by argument if using django-fsm-log
-                trans_func(by=request.user)
+                # Attempt to pass in the request and by argument if using django-fsm-log
+                trans_func(request=request, by=request.user)
             except TypeError:
-                # If the function does not have a by attribute, just call with no arguments
-                trans_func()
+                try:
+                    # Attempt to pass in the by argument if using django-fsm-log
+                    trans_func(by=request.user)
+                except TypeError:
+                    # If the function does not have a by attribute, just call with no arguments
+                    trans_func()
             new_state = self.display_fsm_field(obj, fsm_field_name)
 
             # Mark the fsm_field as changed in the form so it will be
@@ -184,6 +195,13 @@ class FSMTransitionMixin(object):
             self._do_transition(transition, request, obj, form, fsm_field)
         super(FSMTransitionMixin, self).save_model(request, obj, form, change)
 
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        try:
+            return super(FSMTransitionMixin, self).change_view(request, object_id, form_url, extra_context)
+        except ConcurrentTransition as err:
+            messages.error(request, err)
+            return HttpResponseRedirect(request.path)
+
     def get_transition_hints(self, obj):
         """
         See `fsm_transition_hints` templatetag.
@@ -201,9 +219,17 @@ class FSMTransitionMixin(object):
                 if condition(obj):
                     continue
 
+                # if the transition is hidden, we don't need the hint
+                if not transition.custom.get('admin', self.default_disallow_transition):
+                    continue
+
                 hint = getattr(condition, 'hint', '')
                 if hint:
-                    hints[transition.name].append(hint)
+                    if hasattr(transition, 'custom') and transition.custom.get(
+                            'button_name'):
+                        hints[transition.custom['button_name']].append(hint)
+                    else:
+                        hints[transition.name.title()].append(hint)
 
         return dict(hints)
 
@@ -227,6 +253,6 @@ class FSMTransitionMixin(object):
         accessing the property.
         """
         if not isinstance(self.fsm_field, (list, tuple,)):
-            return [self.fsm_field,]
+            return [self.fsm_field]
 
         return self.fsm_field
