@@ -1,0 +1,16 @@
+target-version = "py38"
+line-length = 120
+extend-exclude = ["migrations"]
+
+[lint]
+select = [
+    "E", # PEP8 errors
+    "W", # PEP8 warnings
+    "F", # PyFlakes
+    "I", # isort
+]
+
+[lint.isort]
+combine-as-imports = true
+split-on-trailing-comma = false
+known-first-party = ["fsm_admin"]

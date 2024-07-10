@@ -1,40 +1,37 @@
-django-fsm-admin
-================
+django-fsm-admin-2
+==================
 
 Mixin and template tags to integrate django-fsm-2_ state transitions into the
 Django Admin.
+
+.. note::
+   This project is a fork of django-fsm-admin, actively maintained and enhanced. 
+   It utilizes django-fsm-2 for state transitions in the Django Admin interface, 
+   offering improved functionality and flexibility compared to its predecessor.
+
+   **Differences from django-fsm-admin:**
+   - **django-fsm-2 Integration:** This project integrates django-fsm-2 for state transitions.
+   - **Active Maintenance:** Continuously updated and maintained to support the latest versions of Python and Django.
 
 Installation
 ------------
 
 .. code:: sh
 
-   $ pip install django-fsm-admin
+   $ pip install django-fsm-admin-2
 
 Or from GitHub:
 
 .. code:: sh
 
-   $ pip install -e git://github.com/gadventures/django-fsm-admin.git#egg=django-fsm-admin
+   $ pip install -e git://github.com/coral-li/django-fsm-admin-2.git#egg=django-fsm-admin-2
 
 Usage
 -----
 
 1. Add ``fsm_admin`` to your ``INSTALLED_APPS``.
 
-2. Ensure that you have ``"django.core.context_processors.request"`` in your
-   ``TEMPLATE_CONTEXT_PROCESSORS`` in Django settings. If the setting variable
-   is not yet defined, add:
-
-.. code:: python
-
-   from django.conf import settings
-
-   TEMPLATE_CONTEXT_PROCESSORS = settings.TEMPLATE_CONTEXT_PROCESSORS + (
-       "django.core.context_processors.request",
-   )
-
-3. In your ``admin.py`` file, use ``FSMTransitionMixin`` to add behaviour to your
+2. In your ``admin.py`` file, use ``FSMTransitionMixin`` to add behaviour to your
    ModelAdmin. ``FSMTransitionMixin`` should be before ``ModelAdmin``, the order is
    important.
 
@@ -52,10 +49,10 @@ override it or add additional workflow state fields with the attribute
 
    admin.site.register(YourModel, YourModelAdmin)
 
-4. By adding ``custom=dict(admin=False)`` to the transition decorator, one can
+3. By adding ``custom=dict(admin=False)`` to the transition decorator, one can
    disallow a transition to show up in the admin interface. This specially is
    useful, if the transition method accepts parameters without default values,
-   since in **django-fsm-admin** no arguments can be passed into the transition
+   since in **django-fsm-admin-2** no arguments can be passed into the transition
    method.
 
 .. code:: python
@@ -92,13 +89,15 @@ Try the example
 
 .. code:: sh
 
-   $ git clone git@github.com:gadventures/django-fsm-admin.git
-   $ cd django-fsm-admin
-   $ mkvirtualenv fsm_admin
-   $ pip install -r requirements.txt
+   $ git clone git@github.com:coral-li/django-fsm-admin-2.git
+   $ cd django-fsm-admin-2
+   $ uv venv
+   $ source .venv/bin/activate
+   $ uv pip install -r requirements-dev.txt
    $ python setup.py develop
    $ cd example
-   $ python manage.py syncdb
+   $ python manage.py migrate
+   $ python manage.py createsuperuser --username admin
    $ python manage.py runserver
 
 
