@@ -28,6 +28,7 @@ clean-build:
 	@rm -fr build/
 	@rm -fr dist/
 	@rm -fr *.egg-info
+	@rm -fr fsm_admin/VERSION
 
 clean-pyc:
 	@find . -name '*.pyc' -exec rm -f {} +
@@ -44,9 +45,9 @@ release: clean
 	@twine upload dist/*
 
 lint:
-	ruff format --check .
-	ruff check .
+	@ruff format --check .
+	@ruff check .
 
 format:
-	ruff format .
-	ruff check . --fix
+	@ruff format .
+	@ruff check . --fix
