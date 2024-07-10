@@ -1,7 +1,7 @@
 django-fsm-admin
 ================
 
-Mixin and template tags to integrate django-fsm_ state transitions into the
+Mixin and template tags to integrate django-fsm-2_ state transitions into the
 Django Admin.
 
 Installation
@@ -102,4 +102,4 @@ Try the example
    $ python manage.py runserver
 
 
-.. _django-fsm: https://github.com/kmmbvnr/django-fsm
+.. _django-fsm-2: https://github.com/pfouque/django-fsm-2
