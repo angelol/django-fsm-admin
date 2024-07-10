@@ -12,3 +12,7 @@ docs/_build
 # files
 .DS_Store
 db.sqlite3
+
+.ruff_cache
+.mypy_cache
+__pycache__
