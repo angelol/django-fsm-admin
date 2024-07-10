@@ -21,7 +21,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "Django>=1.6",
-        "django-fsm>=2.1.0",
+        "django-fsm-2>=3.0.0",
     ],
     keywords="django fsm admin",
     license="MIT",

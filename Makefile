@@ -6,7 +6,7 @@ all:
 	@echo
 
 version:
-	@echo "fsm_admim.__version__ == $(VERSION)"
+	@echo "fsm_admin.__version__ == $(VERSION)"
 
 help:
 	@echo " Make targets"
