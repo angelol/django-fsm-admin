@@ -1,10 +1,11 @@
 {% extends 'admin/change_form.html' %}
-{% load fsm_admin %} 
-
-
-{% block submit_buttons_bottom %}{% fsm_submit_row %}{% endblock %}
-
+{% load fsm_admin %}
+{% block submit_buttons_bottom %}
+    {% fsm_submit_row %}
+{% endblock %}
 {% block after_field_sets %}
     {{ block.super }}
-    {% block transition_hints %}{% fsm_transition_hints %}{% endblock %}
-{% endblock %} 
+    {% block transition_hints %}
+        {% fsm_transition_hints %}
+    {% endblock %}
+{% endblock %}
