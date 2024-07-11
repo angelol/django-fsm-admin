@@ -1,4 +1,4 @@
-# django-fsm-admin-2
+# django-fsm-2-admin
 
 Mixin and template tags to integrate [django-fsm-2](https://github.com/pfouque/django-fsm-2) state transitions into the Django Admin.
 
@@ -9,13 +9,13 @@ Mixin and template tags to integrate [django-fsm-2](https://github.com/pfouque/d
 # Installation
 
 ```bash
-pip install django-fsm-admin-2
+pip install django-fsm-2-admin
 ```
 
 Or from GitHub:
 
 ```bash
-pip install -e git://github.com/coral-li/django-fsm-admin-2.git#egg=django-fsm-admin-2
+pip install -e git://github.com/coral-li/django-fsm-2-admin.git#egg=django-fsm-2-admin
 ```
 
 # Usage
@@ -36,7 +36,7 @@ class YourModelAdmin(FSMTransitionMixin, admin.ModelAdmin):
 admin.site.register(YourModel, YourModelAdmin)
 ```
 
-3. By adding ``custom=dict(admin=False)`` to the transition decorator, one can disallow a transition to show up in the admin interface. This specially is useful, if the transition method accepts parameters without default values, since in **django-fsm-admin-2** no arguments can be passed into the transition method.
+3. By adding ``custom=dict(admin=False)`` to the transition decorator, one can disallow a transition to show up in the admin interface. This specially is useful, if the transition method accepts parameters without default values, since in **django-fsm-2-admin** no arguments can be passed into the transition method.
 
 ```python
 @transition(
@@ -67,8 +67,8 @@ This is useful, if most of your state transitions are handled by other means, su
 # Try the example
 
 ```bash
-git clone git@github.com:coral-li/django-fsm-admin-2.git
-cd django-fsm-admin-2
+git clone git@github.com:coral-li/django-fsm-2-admin.git
+cd django-fsm-2-admin
 uv venv
 source .venv/bin/activate
 uv pip install -r requirements-dev.txt

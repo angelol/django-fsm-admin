@@ -23,14 +23,14 @@ with open("fsm_admin/VERSION", "w", encoding="utf-8") as fh:
 readme = open("README.md").read()
 
 setuptools.setup(
-    name="django-fsm-admin-2",
+    name="django-fsm-2-admin",
     version=remote_version,
     author="Coral.li",
     description="Integrate django-fsm-2 state transitions into the django admin",
     long_description=readme,
     long_description_content_type="text/markdown",
     author_email="dev@coral.li",
-    url="https://github.com/coral-li/django-fsm-admin-2",
+    url="https://github.com/coral-li/django-fsm-2-admin",
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=[
