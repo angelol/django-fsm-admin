@@ -3,7 +3,8 @@
 .eggs/
 build
 dist
-docs/_build
+venv
+.venv
 
 # extensions
 *.pyc
@@ -12,3 +13,10 @@ docs/_build
 # files
 .DS_Store
 db.sqlite3
+fsm_admin/VERSION
+**/.DS_STORE
+
+# cache
+.ruff_cache
+.mypy_cache
+__pycache__
